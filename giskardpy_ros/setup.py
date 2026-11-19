@@ -46,6 +46,8 @@ setup(
             f"interactive_marker = {script_folder}.tools.interactive_marker:main",
             f"motion_statechart_inspector = {script_folder}.tools.motion_statechart_inspector:main",
             f"joystick_e_stop = {script_folder}.tools.joystick_e_stop:main",
+            f"tiago_standalone = {script_folder}.iai_robots.tiago.tiago_standalone:main",
+            f"tiago_velocity = {script_folder}.iai_robots.tiago.tiago_velocity:main",
         ],
     },
 )
