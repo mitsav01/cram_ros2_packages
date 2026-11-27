@@ -10,4 +10,8 @@ def generate_launch_description():
         tip_links=["arm_left_tool_link", "arm_right_tool_link", "head_2_link"],
         rviz=True,
         map_world_tf=True,
+<<<<<<< HEAD
     )
+=======
+    )
+>>>>>>> 5a602f7 (Update launch files for tiago_standalone and tiago_velocity executables)
