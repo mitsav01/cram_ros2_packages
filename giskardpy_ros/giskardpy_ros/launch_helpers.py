@@ -1,21 +1,7 @@
-from pathlib import Path
-
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.substitutions import Command, FindExecutable
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
 from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
-
-
-def load_robot_description(package_name: str, relative_path: str):
-    """Load a robot description from a .urdf or .xacro file in a package share."""
-    file_path = Path(get_package_share_directory(package_name)) / relative_path
-    if file_path.suffix == ".xacro":
-        return ParameterValue(
-            Command([FindExecutable(name="xacro"), " ", str(file_path)]),
-            value_type=str,
-        )
-    return file_path.read_text()
+from launch_ros.substitutions import FindPackageShare
 
 
 def giskard_launch_description(
@@ -32,9 +18,9 @@ def giskard_launch_description(
     :param executable: giskard node executable, e.g. "hsr_standalone".
     :param root_links: interactive_marker root_links list.
     :param tip_links: interactive_marker tip_links list.
-    :param xacro_package: package share name holding the robot xacro/urdf (optional).
-    :param xacro_file: path to the .urdf or .xacro within that package, e.g.
-        "robots/hsrb4s.urdf.xacro" or "urdf/tiago_from_our_robot.urdf" (optional).
+    :param xacro_package: package share name holding the robot xacro (optional).
+    :param xacro_file: path to the xacro within that package, e.g.
+        "robots/hsrb4s.urdf.xacro" (optional).
     :param rviz: include the rviz2 node.
     :param map_world_tf: include a map->world static_transform_publisher.
     """
@@ -63,9 +49,16 @@ def giskard_launch_description(
 
     giskard_parameters = []
     if xacro_package and xacro_file:
-        giskard_parameters = [
-            {"robot_description": load_robot_description(xacro_package, xacro_file)}
-        ]
+        robot_description = Command(
+            [
+                FindExecutable(name="xacro"),
+                " ",
+                PathJoinSubstitution(
+                    [FindPackageShare(xacro_package), *xacro_file.split("/")]
+                ),
+            ]
+        )
+        giskard_parameters = [{"robot_description": robot_description}]
 
     nodes.append(
         Node(

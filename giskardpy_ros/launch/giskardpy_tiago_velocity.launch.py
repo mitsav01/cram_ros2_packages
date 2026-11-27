@@ -13,8 +13,4 @@ def generate_launch_description():
         ],
         rviz=True,
         map_world_tf=False,
-<<<<<<< HEAD
     )
-=======
-    )
->>>>>>> 5a602f7 (Update launch files for tiago_standalone and tiago_velocity executables)
